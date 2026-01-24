@@ -40,8 +40,6 @@ import static edu.wpi.first.units.Units.Meter;
 public class DriveTrain extends SubsystemBase {
   public SwerveDrive swerveDrive;
   public double maximumSpeed = Units.feetToMeters(20);
-  public Vision visionSubsystem;
-  private boolean k_vision;
   public Command dynamicPath;
   public DriveTrain(File directory) {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -60,9 +58,6 @@ public class DriveTrain extends SubsystemBase {
         0.1);
     swerveDrive.setModuleEncoderAutoSynchronize(false,
         1);
-
-
-      setupPhotonVision();
   
 
   }
@@ -202,82 +197,28 @@ public class DriveTrain extends SubsystemBase {
     swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
 
-  // drivetoSetpoint
-  public void setupPhotonVision() {
-    k_vision = true;
-    visionSubsystem = new Vision();
-  }
 
   public double setAutoDouble() {
     return 0;
   }
 
-  @Override
-  public void periodic() {
-    swerveDrive.updateOdometry();
-
-
-      visionSubsystem.updatePoseEstimation(swerveDrive, swerveDrive.getPose());
-      SmartDashboard.putNumber("Pose X", getPose().getX());
-      SmartDashboard.putNumber("PoseY", getPose().getY());
-      SmartDashboard.putNumber("Pose rotation", getPose().getRotation().getDegrees());
-
-  }
-
-  public Pose2d nearestReef(Pose2d robotPos){
-        var c = 8.774176*2;
-        var dist = 500;
-       //NOTE DOES DIST NEED TO BE CHANCGED TO THE CLOOSEST?
-        var centX = Constants.reefConstants.reefX;
-        var centY = Constants.reefConstants.reefY;
-        double xd=0;
-        double yd=0;
-        var alliance = DriverStation.getAlliance();
-        for(var i=0;i<Constants.reefConstants.pointsX.length;i++){
-            var xpos = Constants.reefConstants.pointsX[i];
-            var ypos = Constants.reefConstants.pointsY[i];
-            if(alliance.get() == DriverStation.Alliance.Red){
-                xpos= xpos * (-1) + c;
-                //ypos= ypos * (-1) + c;
-                centX =  Constants.reefConstants.reefX* (-1) + c;
-            }
-            if( (robotPos.getX()-xpos)*(robotPos.getX()-xpos) + (robotPos.getY()-ypos)*(robotPos.getY()-ypos)  < dist){
-               
-                xd=xpos;
-                yd=ypos;
-            }
-        }
-       //BRET DOES THIS RETURN THE FINIAL POSTION OR THE TRANSLATION 2D to get there. We just need the closest final position. 
-        return new Pose2d(new Translation2d(xd,yd), new Rotation2d(xd-centX,yd-centY));
-
-
-        //2d translation excepts a anlge in radians not vectors? 
-    }
-
- 
     
 
-public void getToPoint(){
-  List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        getPose(),
-        nearestReef(getPose())); 
-
-PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+// PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
 
 // Create the path using the waypoints created above
-PathPlannerPath path = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-);
-  dynamicPath = AutoBuilder.followPath(path);
-  dynamicPath.schedule();
-}
+// PathPlannerPath path = new PathPlannerPath(
+//         waypoints,
+//         constraints,
+//         null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+//         new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+// );
+//   dynamicPath = AutoBuilder.followPath(path);
+//   dynamicPath.schedule();
+// }
 
-public void cancelGetToPoint(){
-  if (dynamicPath != null && dynamicPath.isScheduled()) {
-  dynamicPath.cancel();
-  }
-}
+// public void cancelGetToPoint(){
+//   if (dynamicPath != null && dynamicPath.isScheduled()) {
+//   dynamicPath.cancel();
+//   }
 }
