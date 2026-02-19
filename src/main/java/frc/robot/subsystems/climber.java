@@ -59,7 +59,9 @@ public class climber extends SubsystemBase {
   public climber() {
     deployMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast);
+      .idleMode(IdleMode.kCoast)
+      .smartCurrentLimit(40)
+      ;
 
       deployMotorConfig.encoder
       .positionConversionFactor(1)
@@ -75,7 +77,8 @@ public class climber extends SubsystemBase {
       
     climbMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast);
+      .idleMode(IdleMode.kCoast)
+      .smartCurrentLimit(40);
 
       climbMotorConfig.encoder
       .positionConversionFactor(1)

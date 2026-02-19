@@ -39,7 +39,8 @@ public class intake extends SubsystemBase {
   public intake() {
     intakeMotorConfig
       .inverted(false)
-      .idleMode(IdleMode.kCoast);
+      .idleMode(IdleMode.kCoast)
+      .smartCurrentLimit(40);
 
       intakeMotorConfig.encoder
       .positionConversionFactor(1)
@@ -55,7 +56,8 @@ public class intake extends SubsystemBase {
      
      foldMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast);
+      .idleMode(IdleMode.kCoast)
+      .smartCurrentLimit(40);
 
       foldMotorConfig.encoder
       .positionConversionFactor(1)
