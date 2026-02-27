@@ -35,12 +35,12 @@ public class intake extends SubsystemBase {
     SparkMaxConfig foldMotorConfig = new SparkMaxConfig();
     static SparkClosedLoopController foldPID = foldMotor.getClosedLoopController();
     public RelativeEncoder foldMotorEncoder = foldMotor.getEncoder();
+    double targetFoldSpeed =0.0;
     double targetPos = 0.0;
   public intake() {
     intakeMotorConfig
       .inverted(false)
-      .idleMode(IdleMode.kCoast)
-      .smartCurrentLimit(40);
+      .idleMode(IdleMode.kCoast);
 
       intakeMotorConfig.encoder
       .positionConversionFactor(1)
@@ -49,15 +49,14 @@ public class intake extends SubsystemBase {
       intakeMotorConfig.closedLoop.feedForward
       //.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       //.pid(0.0000, 0, 0)
-      .kV(0.001)
+      .kV(00)
       ;
     
     foldMotor.configure(foldMotorConfig, ResetMode.kResetSafeParameters, null);
      
      foldMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast)
-      .smartCurrentLimit(40);
+      .idleMode(IdleMode.kCoast);
 
       foldMotorConfig.encoder
       .positionConversionFactor(1)
@@ -65,7 +64,7 @@ public class intake extends SubsystemBase {
 
       foldMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.08, 0, 0)
+      .pid(0.001, 0, 0)
       .maxOutput(0.1)
       ;
     
@@ -79,7 +78,7 @@ public class intake extends SubsystemBase {
   public void movePOS (){
     
      //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
-          if(targetPos == 0.0){
+          if(targetPos == Constants.intakeConstants.intakeInRotations){
             foldOut();
           }else{
             foldIn();
@@ -108,7 +107,7 @@ public class intake extends SubsystemBase {
     }
 
     public void foldIn (){
-      targetPos = 0.0; 
+      targetPos = Constants.intakeConstants.intakeInRotations; 
       //SmartDashboard.putString("Elevator Set Level", "level One");
     }
 
@@ -142,6 +141,47 @@ public class intake extends SubsystemBase {
     }
     spinIntake();
   }
+
+  public void spinFold (){
+    
+     //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
+          /* 
+            intakePID.setSetpoint(
+              targetSpeed,
+              SparkBase.ControlType.kVelocity, 
+              ClosedLoopSlot.kSlot0,
+              0, 
+              ArbFFUnits.kVoltage);*/
+        foldMotor.set(targetFoldSpeed);
+            
+    }
+    public void foldFor(){
+    targetFoldSpeed = Constants.intakeConstants.setFoldSpeed;
+    spinFold();
+  }
+
+  public void FoldRev(){
+    targetFoldSpeed = -Constants.intakeConstants.setFoldSpeed;
+    spinFold();
+  }
+  public void stopFoldFor(){
+    if(targetFoldSpeed == -Constants.intakeConstants.setFoldSpeed){
+      targetFoldSpeed = -Constants.intakeConstants.setFoldSpeed;
+    }else{
+      targetFoldSpeed = 0.0;
+    }
+    spinFold();
+  }
+  public void stopFoldRev(){
+    if(targetFoldSpeed == Constants.intakeConstants.setFoldSpeed){
+      targetFoldSpeed = Constants.intakeConstants.setFoldSpeed;
+    }else{
+      targetFoldSpeed = 0.0;
+    }
+    spinFold();
+  }
+
+
   /**
    * Example command factory method.
    *

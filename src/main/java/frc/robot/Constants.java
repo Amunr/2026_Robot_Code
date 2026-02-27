@@ -15,24 +15,27 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
     public static final double deadband = 0.1;
   }
 
-  public static class climberConstants{
-    public static final int climberMotorID=16;
-    public static final int deployMotorID = 17;
-    public static final double forwardRotations = 10.0;
-    public static final double forwardRotationsClimb = 10.0;
-    public static final double climbLevel1 = 10.0;
-    public static final double climbLevel2 = 20.0;
-    public static final double climbLevel3 = 30.0;
-    public static final double overShoot = 2.0;
+public static class climberConstants{
+    public static final int climberMotorID=17;
+    public static final int deployMotorID = 16;
+    public static final double forwardRotations = 0.0;
+    public static final double forwardRotationsClimb = 0.0;
+    public static final double climbLevel1 = 0.0;
+    public static final double climbLevel2 = 0.0;
+    public static final double climbLevel3 = 0.0;
+    public static final double overShoot = 0.0;
   }
   public static class intakeConstants{
-    public static final int intakeMotorID=14;
-    public static final int intakeDeployMotorID=15;
-    public static final double intakeOutRotations = 10.0;
-    public static final double setIntakeSpeed = 0.1;
+    public static final int intakeMotorID=15;
+    public static final int intakeDeployMotorID=14;
+    public static final double intakeOutRotations = 22.0;
+    public static final double intakeInRotations = 2.0;
+    public static final double setIntakeSpeed = 1.0;
+    public static final double setFoldSpeed = 0.09;
     
   }
    public static class reefConstants {

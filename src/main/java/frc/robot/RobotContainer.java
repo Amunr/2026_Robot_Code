@@ -44,7 +44,8 @@ public class RobotContainer {
   public final CommandXboxController driverXbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-
+  public final CommandXboxController operatorXboxController =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   //Swerve
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveTrain.getSwerveDrive(),
       () -> driverXbox.getLeftY(),
@@ -98,22 +99,28 @@ public class RobotContainer {
     new InstantCommand(m_climberSubsystem::moveClimber),
     new WaitCommand(2)
     );
+    /* 
      new JoystickButton(driverXbox.getHID(), XboxController.Button.kRightBumper.value)
     .onTrue(new InstantCommand(m_climberSubsystem::movePOS));
     new JoystickButton(driverXbox.getHID(), XboxController.Button.kLeftBumper.value)
-    .onTrue(climbl1);
+    .onTrue(climbl1);*/
 
 
     Command intakeForward = new SequentialCommandGroup(
     new InstantCommand(m_intakeSubsystem::intakeFuel),
     new InstantCommand(m_intakeSubsystem::spinIntake)
     );
-    new JoystickButton(driverXbox.getHID(), XboxController.Button.kA.value)
+    new JoystickButton(operatorXboxController.getHID(), XboxController.Button.kA.value)
     .onTrue(new InstantCommand(m_intakeSubsystem::movePOS));
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > 0.3).whileTrue(new InstantCommand(m_intakeSubsystem::intakeFuel))
+    new Trigger(() -> operatorXboxController.getRightTriggerAxis() > 0.3).whileTrue(new InstantCommand(m_intakeSubsystem::intakeFuel))
     .onFalse(new InstantCommand(m_intakeSubsystem::stopIntake));
-    new Trigger(() -> driverXbox.getLeftTriggerAxis() > 0.3).whileTrue(new InstantCommand(m_intakeSubsystem::extakeFuel))
+    new Trigger(() -> operatorXboxController.getLeftTriggerAxis() > 0.3).whileTrue(new InstantCommand(m_intakeSubsystem::extakeFuel))
     .onFalse(new InstantCommand(m_intakeSubsystem::stopExtake));
+
+    new Trigger(new JoystickButton(operatorXboxController.getHID(), XboxController.Button.kLeftBumper.value)).whileTrue(new InstantCommand(m_intakeSubsystem::foldFor))
+    .onFalse(new InstantCommand(m_intakeSubsystem::stopFoldFor));
+    new Trigger(new JoystickButton(operatorXboxController.getHID(), XboxController.Button.kRightBumper.value)).whileTrue(new InstantCommand(m_intakeSubsystem::FoldRev))
+    .onFalse(new InstantCommand(m_intakeSubsystem::stopFoldRev));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

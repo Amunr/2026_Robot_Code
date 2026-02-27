@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
+  
   public static SparkMax deployMotor = new SparkMax(Constants.climberConstants.deployMotorID,MotorType.kBrushless);
   SparkMaxConfig deployMotorConfig = new SparkMaxConfig();
   static SparkClosedLoopController deployPID = deployMotor.getClosedLoopController();
@@ -59,9 +60,7 @@ public class climber extends SubsystemBase {
   public climber() {
     deployMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast)
-      .smartCurrentLimit(40)
-      ;
+      .idleMode(IdleMode.kCoast);
 
       deployMotorConfig.encoder
       .positionConversionFactor(1)
@@ -70,15 +69,14 @@ public class climber extends SubsystemBase {
       deployMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       .pid(0.01, 0, 0)
-      .maxOutput(0.1)
+      .maxOutput(0)
       ;
     
     deployMotor.configure(deployMotorConfig, ResetMode.kResetSafeParameters, null);
       
     climbMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast)
-      .smartCurrentLimit(40);
+      .idleMode(IdleMode.kCoast);
 
       climbMotorConfig.encoder
       .positionConversionFactor(1)
@@ -87,7 +85,7 @@ public class climber extends SubsystemBase {
       climbMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       .pid(0.01, 0, 0)
-      .maxOutput(0.1)
+      .maxOutput(0)
       ;
     
     climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters, null);
