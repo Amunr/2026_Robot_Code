@@ -68,7 +68,7 @@ public class climber extends SubsystemBase {
 
       deployMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.01, 0, 0)
+      .pid(0.001, 0, 0)
       .maxOutput(0)
       ;
     
@@ -84,7 +84,7 @@ public class climber extends SubsystemBase {
 
       climbMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.01, 0, 0)
+      .pid(0.001, 0, 0)
       .maxOutput(0)
       ;
     
