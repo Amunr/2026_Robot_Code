@@ -92,13 +92,7 @@ public class RobotContainer {
     Command driveRobotOrientedAngularVelocity  = driveTrain.driveFieldOriented(driveRobotOriented);
     driveTrain.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    Command climbl1 = new SequentialCommandGroup(new InstantCommand(m_climberSubsystem::setL1Over),
-    new InstantCommand(m_climberSubsystem::moveClimber),
-    new WaitCommand(4),
-    new InstantCommand(m_climberSubsystem::setL1),
-    new InstantCommand(m_climberSubsystem::moveClimber),
-    new WaitCommand(2)
-    );
+
     /* 
      new JoystickButton(driverXbox.getHID(), XboxController.Button.kRightBumper.value)
     .onTrue(new InstantCommand(m_climberSubsystem::movePOS));
