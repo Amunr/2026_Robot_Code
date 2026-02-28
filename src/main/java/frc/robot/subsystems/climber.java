@@ -28,6 +28,7 @@ import frc.robot.Constants.climberConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -46,37 +47,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  
-  public static SparkMax deployMotor = new SparkMax(Constants.climberConstants.deployMotorID,MotorType.kBrushless);
-  SparkMaxConfig deployMotorConfig = new SparkMaxConfig();
-  static SparkClosedLoopController deployPID = deployMotor.getClosedLoopController();
-  public RelativeEncoder deployMotorEncoder = deployMotor.getEncoder();
   double targetRotations = 0.0;
   public static SparkMax climbMotor = new SparkMax(Constants.climberConstants.climberMotorID,MotorType.kBrushless);
   SparkMaxConfig climbMotorConfig = new SparkMaxConfig();
   static SparkClosedLoopController climbPID = climbMotor.getClosedLoopController();
   public RelativeEncoder climbMotorEncoder = climbMotor.getEncoder();
+  
   double targetRotationsClimb = 0.0;
   public climber() {
-    deployMotorConfig
-      .inverted(true)
-      .idleMode(IdleMode.kCoast);
 
-      deployMotorConfig.encoder
-      .positionConversionFactor(1)
-      .velocityConversionFactor(1);
-
-      deployMotorConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.001, 0, 0)
-      .maxOutput(0)
-      ;
-    
-    deployMotor.configure(deployMotorConfig, ResetMode.kResetSafeParameters, null);
-      
     climbMotorConfig
       .inverted(true)
-      .idleMode(IdleMode.kCoast);
+      .idleMode(IdleMode.kBrake);
 
       climbMotorConfig.encoder
       .positionConversionFactor(1)
@@ -84,9 +66,16 @@ public class climber extends SubsystemBase {
 
       climbMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.001, 0, 0)
-      .maxOutput(0)
+      .pid(0.0001, 0, 0)
+      .outputRange(-0.7, 0.7);
+
+      climbMotorConfig.softLimit
+      .forwardSoftLimit(climberConstants.maxLevel)
+              .forwardSoftLimitEnabled(true)
+      .reverseSoftLimit(climberConstants.minLevel)
+            .reverseSoftLimitEnabled(true)
       ;
+
     
     climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters, null);
       
@@ -95,22 +84,6 @@ public class climber extends SubsystemBase {
   }
 
 
-  public void movePOS (){
-    
-     //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
-          if(targetRotations == 0.0){
-            setForward();
-          }else{
-            setBackward();
-          }
-            deployPID.setSetpoint(
-              targetRotations,
-              SparkBase.ControlType.kPosition, 
-              ClosedLoopSlot.kSlot0,
-              0, 
-              ArbFFUnits.kVoltage);
-            
-    }
     public void moveClimber(){
       climbPID.setSetpoint(
             targetRotationsClimb,
@@ -120,43 +93,26 @@ public class climber extends SubsystemBase {
             ArbFFUnits.kVoltage);
     }
 
-  public void setBackward (){
-      targetRotations = 0.0; 
-      //SmartDashboard.putString("Elevator Set Level", "level One");
+
+    public void spinForward(){
+      climbMotor.set(0.1);
+    }
+    public void spinReverse(){
+      climbMotor.set(-0.1);
+    }
+    public void stopClimb(){
+      climbMotor.set(0.0);
     }
 
-  public void setForward (){
-      targetRotations = climberConstants.forwardRotations; 
-      //SmartDashboard.putString("Elevator Set Level", "level One");
+
+    public void climbUp(){
+      targetRotationsClimb = climberConstants.highLevel;
+      moveClimber();
     }
 
-  public double getEnc (){
-      return deployMotorEncoder.getPosition();
-   }
-
-    public void resetEnc (){
-       deployMotorEncoder.setPosition(0);
-  }
-  public void setL1(){
-      targetRotationsClimb = climberConstants.climbLevel1; 
-      //SmartDashboard.putString("Elevator Set Level", "level One");
-    }
-    public void setL1Over(){
-      targetRotationsClimb = climberConstants.climbLevel1+climberConstants.overShoot; 
-    }
-    public void setL2(){
-      targetRotationsClimb = climberConstants.climbLevel2; 
-      //SmartDashboard.putString("Elevator Set Level", "level Two");
-    }
-     public void setL2Over(){
-      targetRotationsClimb = climberConstants.climbLevel2+climberConstants.overShoot; 
-    }
-    public void setL3(){
-      targetRotationsClimb = climberConstants.climbLevel3; 
-      //SmartDashboard.putString("Elevator Set Level", "level Three");
-    }
-     public void setL3Over(){
-      targetRotationsClimb = climberConstants.climbLevel3+climberConstants.overShoot; 
+    public void climbDown(){
+      targetRotationsClimb = climberConstants.baseLevel;
+      moveClimber();
     }
 
       //SmartDashboard.putString("elavator forward", "false");
@@ -190,6 +146,7 @@ public class climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Climb ENC", climbMotorEncoder.getPosition());
   }
 
   @Override

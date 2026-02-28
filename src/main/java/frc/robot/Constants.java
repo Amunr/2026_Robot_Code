@@ -24,6 +24,10 @@ public static class climberConstants{
     public static final int deployMotorID = 16;
     public static final double forwardRotations = 0.0;
     public static final double forwardRotationsClimb = 0.0;
+    public static final double minLevel = -18.375;
+    public static final double baseLevel = -15.375;
+    public static final double highLevel = 27.0;
+    public static final double maxLevel = 30.0;
     public static final double climbLevel1 = 0.0;
     public static final double climbLevel2 = 0.0;
     public static final double climbLevel3 = 0.0;
