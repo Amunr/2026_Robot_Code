@@ -32,6 +32,9 @@ public static class climberConstants{
     public static final double climbLevel2 = 0.0;
     public static final double climbLevel3 = 0.0;
     public static final double overShoot = 0.0;
+    public static  double climberP = 0.0001;
+    public static  double climberI = 0;
+    public static  double climberD = 0.0;
   }
   public static class intakeConstants{
     public static final int intakeMotorID=15;

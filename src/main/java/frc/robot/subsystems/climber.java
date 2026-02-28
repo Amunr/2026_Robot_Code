@@ -66,7 +66,7 @@ public class climber extends SubsystemBase {
 
       climbMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.0001, 0, 0)
+      .pid(Constants.climberConstants.climberP, Constants.climberConstants.climberI, Constants.climberConstants.climberD)
       .outputRange(-0.7, 0.7);
 
       climbMotorConfig.softLimit
@@ -147,10 +147,10 @@ public class climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb ENC", climbMotorEncoder.getPosition());
-  }
+                Constants.climberConstants.climberP = SmartDashboard.getNumber("Climber P", Constants.climberConstants.climberP);
+                Constants.climberConstants.climberI = SmartDashboard.getNumber("Climber I", Constants.climberConstants.climberI); 
+                Constants.climberConstants.climberD = SmartDashboard.getNumber("Climber D", Constants.climberConstants.climberD);
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+
   }
 }
