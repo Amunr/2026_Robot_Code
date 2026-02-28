@@ -147,6 +147,9 @@ public class climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb ENC", climbMotorEncoder.getPosition());
+    SmartDashboard.putNumber("Climber P", Constants.climberConstants.climberP);
+               SmartDashboard.putNumber("Climber I", Constants.climberConstants.climberI); 
+          SmartDashboard.putNumber("Climber D", Constants.climberConstants.climberD);
                 Constants.climberConstants.climberP = SmartDashboard.getNumber("Climber P", Constants.climberConstants.climberP);
                 Constants.climberConstants.climberI = SmartDashboard.getNumber("Climber I", Constants.climberConstants.climberI); 
                 Constants.climberConstants.climberD = SmartDashboard.getNumber("Climber D", Constants.climberConstants.climberD);
