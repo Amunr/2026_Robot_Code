@@ -67,7 +67,7 @@ public class climber extends SubsystemBase {
       climbMotorConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       .pid(Constants.climberConstants.climberP, Constants.climberConstants.climberI, Constants.climberConstants.climberD)
-      .outputRange(-0.7, 0.7);
+      .outputRange(-0.9, 0.9);
 
       climbMotorConfig.softLimit
       .forwardSoftLimit(climberConstants.maxLevel)
@@ -78,11 +78,9 @@ public class climber extends SubsystemBase {
 
     
     climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters, null);
-      
 
 
   }
-
 
     public void moveClimber(){
       climbPID.setSetpoint(
@@ -113,6 +111,10 @@ public class climber extends SubsystemBase {
     public void climbDown(){
       targetRotationsClimb = climberConstants.baseLevel;
       moveClimber();
+    }
+
+    public void resetClimbEncoder(){
+      climbMotorEncoder.setPosition(0.0);
     }
 
       //SmartDashboard.putString("elavator forward", "false");
@@ -147,12 +149,9 @@ public class climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb ENC", climbMotorEncoder.getPosition());
-    SmartDashboard.putNumber("Climber P", Constants.climberConstants.climberP);
+              SmartDashboard.putNumber("Climber P", Constants.climberConstants.climberP);
                SmartDashboard.putNumber("Climber I", Constants.climberConstants.climberI); 
           SmartDashboard.putNumber("Climber D", Constants.climberConstants.climberD);
-                Constants.climberConstants.climberP = SmartDashboard.getNumber("Climber P", Constants.climberConstants.climberP);
-                Constants.climberConstants.climberI = SmartDashboard.getNumber("Climber I", Constants.climberConstants.climberI); 
-                Constants.climberConstants.climberD = SmartDashboard.getNumber("Climber D", Constants.climberConstants.climberD);
 
 
   }

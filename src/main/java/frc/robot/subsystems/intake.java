@@ -17,11 +17,16 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.intakeConstants;
+
+
 
 public class intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -30,13 +35,11 @@ public class intake extends SubsystemBase {
     static SparkClosedLoopController intakePID = intakeMotor.getClosedLoopController();
     static FeedForwardConfig intakeFF = new FeedForwardConfig();
     public RelativeEncoder intakeMotorEncoder = intakeMotor.getEncoder();
-    double targetSpeed = 0.0;
-    public static SparkMax foldMotor = new SparkMax(Constants.intakeConstants.intakeDeployMotorID,MotorType.kBrushless);
-    SparkMaxConfig foldMotorConfig = new SparkMaxConfig();
-    static SparkClosedLoopController foldPID = foldMotor.getClosedLoopController();
-    public RelativeEncoder foldMotorEncoder = foldMotor.getEncoder();
-    double targetFoldSpeed =0.0;
-    double targetPos = 0.0;
+     PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
+      DoubleSolenoid m_doubleSolenoidLeft = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDLeftF, Constants.intakeConstants.intakeNuIDLeftR);
+      DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
+  
+
   public intake() {
     intakeMotorConfig
       .inverted(false)
@@ -51,47 +54,11 @@ public class intake extends SubsystemBase {
       //.pid(0.0000, 0, 0)
       .kV(00)
       ;
-    
-    foldMotor.configure(foldMotorConfig, ResetMode.kResetSafeParameters, null);
-     
-     foldMotorConfig
-      .inverted(true)
-      .idleMode(IdleMode.kCoast);
-
-      foldMotorConfig.encoder
-      .positionConversionFactor(1)
-      .velocityConversionFactor(1);
-
-      foldMotorConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(0.001, 0, 0)
-      .maxOutput(0.1)
-      ;
-    
-    foldMotor.configure(foldMotorConfig, ResetMode.kResetSafeParameters, null);
      
 
 
   }
 
-
-  public void movePOS (){
-    
-     //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
-          if(targetPos == Constants.intakeConstants.intakeInRotations){
-            foldOut();
-          }else{
-            foldIn();
-          }
-            foldPID.setSetpoint(
-              targetPos,
-              SparkBase.ControlType.kPosition, 
-              ClosedLoopSlot.kSlot0,
-              0, 
-              ArbFFUnits.kVoltage);
-
-            
-    }
     public void spinIntake (){
     
      //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
@@ -102,120 +69,75 @@ public class intake extends SubsystemBase {
               ClosedLoopSlot.kSlot0,
               0, 
               ArbFFUnits.kVoltage);*/
-        intakeMotor.set(targetSpeed);
+        intakeMotor.set(0.7);
             
     }
-
-    public void foldIn (){
-      targetPos = Constants.intakeConstants.intakeInRotations; 
-      //SmartDashboard.putString("Elevator Set Level", "level One");
+    public void stopIntake(){
+      intakeMotor.stopMotor();
     }
 
-  public void foldOut (){
-      targetPos = intakeConstants.intakeOutRotations; 
-      //SmartDashboard.putString("Elevator Set Level", "level One");
-    }
+    public void reverseINtake(){
+      intakeMotor.set(-0.7);
+    } 
 
-  public void intakeFuel(){
-    targetSpeed = Constants.intakeConstants.setIntakeSpeed;
-    spinIntake();
-  }
 
-  public void extakeFuel(){
-    targetSpeed = -Constants.intakeConstants.setIntakeSpeed;
-    spinIntake();
-  }
-  public void stopIntake(){
-    if(targetSpeed == -Constants.intakeConstants.setIntakeSpeed){
-      targetSpeed = -Constants.intakeConstants.setIntakeSpeed;
-    }else{
-      targetSpeed = 0.0;
-    }
-    spinIntake();
-  }
-  public void stopExtake(){
-    if(targetSpeed == Constants.intakeConstants.setIntakeSpeed){
-      targetSpeed = Constants.intakeConstants.setIntakeSpeed;
-    }else{
-      targetSpeed = 0.0;
-    }
-    spinIntake();
+
+  public void intakeFoldOut(){
+    m_doubleSolenoidLeft.set(Value.kForward);
+    m_doubleSolenoidRight.set(Value.kForward);
   }
 
-  public void spinFold (){
-    
-     //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
-          /* 
-            intakePID.setSetpoint(
-              targetSpeed,
-              SparkBase.ControlType.kVelocity, 
-              ClosedLoopSlot.kSlot0,
-              0, 
-              ArbFFUnits.kVoltage);*/
-        foldMotor.set(targetFoldSpeed);
-            
-    }
-    public void foldFor(){
-    targetFoldSpeed = Constants.intakeConstants.setFoldSpeed;
-    spinFold();
-  }
-
-  public void FoldRev(){
-    targetFoldSpeed = -Constants.intakeConstants.setFoldSpeed;
-    spinFold();
-  }
-  public void stopFoldFor(){
-    if(targetFoldSpeed == -Constants.intakeConstants.setFoldSpeed){
-      targetFoldSpeed = -Constants.intakeConstants.setFoldSpeed;
-    }else{
-      targetFoldSpeed = 0.0;
-    }
-    spinFold();
-  }
-  public void stopFoldRev(){
-    if(targetFoldSpeed == Constants.intakeConstants.setFoldSpeed){
-      targetFoldSpeed = Constants.intakeConstants.setFoldSpeed;
-    }else{
-      targetFoldSpeed = 0.0;
-    }
-    spinFold();
-  }
-
+  public void intakeFoldIn(){
+    m_doubleSolenoidLeft.set(Value.kReverse);
+    m_doubleSolenoidRight.set(Value.kReverse);
+  } 
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-
-    SmartDashboard.putNumber("foldMotorVelocity", foldMotorEncoder.getPosition());
-    SmartDashboard.putNumber("foldMotorSetpoint", targetPos);
-    SmartDashboard.putNumber("intakeMotorVelocity", intakeMotorEncoder.getVelocity());
-    SmartDashboard.putNumber("intakeMotorSetpoint", targetSpeed);
+  switch (m_doubleSolenoidLeft.get()) {
+      case kOff:
+        SmartDashboard.putString("Get Solenoid", "kOff");
+        break;
+      case kForward:
+        SmartDashboard.putString("Get Solenoid", "kForward");
+        break;
+      case kReverse:
+        SmartDashboard.putString("Get Solenoid", "kReverse");
+        break;
+      default:
+        SmartDashboard.putString("Get Solenoid", "N/A");
+        break;
 
   }
+
+   switch (m_doubleSolenoidRight.get()) {
+      case kOff:
+        SmartDashboard.putString("Get Solenoid", "kOff");
+        break;
+      case kForward:
+        SmartDashboard.putString("Get Solenoid", "kForward");
+        break;
+      case kReverse:
+        SmartDashboard.putString("Get Solenoid", "kReverse");
+        break;
+      default:
+        SmartDashboard.putString("Get Solenoid", "N/A");
+        break;
+
+  }
+        }
+
 
   @Override
   public void simulationPeriodic() {
