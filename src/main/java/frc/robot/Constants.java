@@ -38,6 +38,7 @@ public static class climberConstants{
   }
   public static class intakeConstants{
     public static final int intakeMotorID=15;
+    public static final int intakeMotorSecond = 19;
     public static final int intakeNuIDLeftF= 1;
         public static final int intakeNuIDLeftR= 1;
 
@@ -55,6 +56,26 @@ public static class climberConstants{
     public static final double reefY = 4.026460647583008;
     public static final double[] pointsX = { 5.8339008113657025 , 5.668800811365703 , 4.326700000000001 , 3.1496991886342975 , 3.3147991886342965 , 4.6568999999999985 , 5.668800811365703 , 5.8339008113657025 , 4.6569 , 3.3147991886342973 , 3.149699188634296 , 4.326699999999998};
     public static final double[] pointsY = {4.61068120583519 , 3.15627720583519 , 2.572056 , 3.44223879416481 , 4.89664279416481 , 5.480864 , 4.896642794164811 , 3.442238794164811 , 2.572056 , 3.1562772058351882 , 4.6106812058351885 , 5.480864};
+
+    }
+
+    public static class driveConstants {
+      public static class lowerTrench {
+        public static final double x1 = 1.0;
+        public static final double y1 = 4.0;
+        public static final double x2 = 1.0;
+        public static final double y2 = 4.0;
+        public static final double x3 = 1.0;
+        public static final double y3 = 4.0;
+      }
+        public static class upperTrench {
+          public static final double x1 = 1.0;
+          public static final double y1 = 4.0;
+          public static final double x2 = 1.0;
+          public static final double y2 = 4.0;
+          public static final double x3 = 1.0;
+          public static final double y3 = 4.0;
+        }
 
     }
 }

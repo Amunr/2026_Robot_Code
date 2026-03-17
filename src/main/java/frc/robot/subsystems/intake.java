@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -32,35 +33,27 @@ public class intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public static SparkMax intakeMotor = new SparkMax(Constants.intakeConstants.intakeMotorID,MotorType.kBrushless);
     SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
-    static SparkClosedLoopController intakePID = intakeMotor.getClosedLoopController();
-    static FeedForwardConfig intakeFF = new FeedForwardConfig();
+    public static SparkMax intakeMotorSecond = new SparkMax(Constants.intakeConstants.intakeMotorSecond,MotorType.kBrushless);
     public RelativeEncoder intakeMotorEncoder = intakeMotor.getEncoder();
      PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
       DoubleSolenoid m_doubleSolenoidLeft = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDLeftF, Constants.intakeConstants.intakeNuIDLeftR);
       DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
 
   public intake() {
-    intakeMotorConfig
-      .inverted(false)
-      .idleMode(IdleMode.kCoast);
-
-      intakeMotorConfig.encoder
-      .positionConversionFactor(1)
-      .velocityConversionFactor(1);
-
-      intakeMotorConfig.closedLoop.feedForward
-      //.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      //.pid(0.0000, 0, 0)
-      .kV(00)
-      ;
-     
 
       m_pH.enableCompressorDigital();
   }
 
     public void spinIntake (){
-    
-     //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
+
+      intakeMotorConfig
+    .inverted(false)
+    .idleMode(IdleMode.kCoast);
+intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); 
+
+intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); 
+
+//  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
           /* 
             intakePID.setSetpoint(
               targetSpeed,

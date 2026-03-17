@@ -40,7 +40,7 @@ import static edu.wpi.first.units.Units.Meter;
 public class DriveTrain extends SubsystemBase {
   public SwerveDrive swerveDrive;
   public double maximumSpeed = Units.feetToMeters(20);
-  //public Vision visionSubsystem;
+  public Vision visionSubsystem;
   private boolean k_vision;
   public Command dynamicPath;
   public DriveTrain(File directory) {
@@ -205,7 +205,7 @@ public class DriveTrain extends SubsystemBase {
   // drivetoSetpoint
   public void setupPhotonVision() {
     k_vision = true;
-    //visionSubsystem = new Vision();
+    visionSubsystem = new Vision();
   }
 
   public double setAutoDouble() {
@@ -217,50 +217,49 @@ public class DriveTrain extends SubsystemBase {
     swerveDrive.updateOdometry();
 
 
-      //visionSubsystem.updatePoseEstimation(swerveDrive, swerveDrive.getPose());
+      visionSubsystem.updatePoseEstimation(swerveDrive, swerveDrive.getPose());
       SmartDashboard.putNumber("Pose X", getPose().getX());
       SmartDashboard.putNumber("PoseY", getPose().getY());
       SmartDashboard.putNumber("Pose rotation", getPose().getRotation().getDegrees());
 
   }
 
-  public Pose2d nearestReef(Pose2d robotPos){
-        var c = 8.774176*2;
-        var dist = 500;
-       //NOTE DOES DIST NEED TO BE CHANCGED TO THE CLOOSEST?
-        var centX = Constants.reefConstants.reefX;
-        var centY = Constants.reefConstants.reefY;
-        double xd=0;
-        double yd=0;
-        var alliance = DriverStation.getAlliance();
-        for(var i=0;i<Constants.reefConstants.pointsX.length;i++){
-            var xpos = Constants.reefConstants.pointsX[i];
-            var ypos = Constants.reefConstants.pointsY[i];
-            if(alliance.get() == DriverStation.Alliance.Red){
-                xpos= xpos * (-1) + c;
-                //ypos= ypos * (-1) + c;
-                centX =  Constants.reefConstants.reefX* (-1) + c;
-            }
-            if( (robotPos.getX()-xpos)*(robotPos.getX()-xpos) + (robotPos.getY()-ypos)*(robotPos.getY()-ypos)  < dist){
-               
-                xd=xpos;
-                yd=ypos;
-            }
+  public List<Pose2d> nearestTrench(Pose2d robotPos){
+    boolean isTopHalf = robotPos.getY() > 4.04;
+    boolean isBlueSide = robotPos.getX() < 8.27;
+    double finalRot = robotPos.getRotation().getRadians();
+    if(isTopHalf && isBlueSide){
+      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(finalRot)));
+    } else if (isTopHalf && !isBlueSide){
+      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(finalRot)));    
+    } else if (!isTopHalf && isBlueSide){
+      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(finalRot))); 
+    
+    } else {
+return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
+      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(finalRot))); 
         }
-       //BRET DOES THIS RETURN THE FINIAL POSTION OR THE TRANSLATION 2D to get there. We just need the closest final position. 
-        return new Pose2d(new Translation2d(xd,yd), new Rotation2d(xd-centX,yd-centY));
-
-
-        //2d translation excepts a anlge in radians not vectors? 
     }
 
  
     
 
 public void getToPoint(){
+      List<Pose2d> waypointTarget = nearestTrench(getPose());
+
   List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
         getPose(),
-        nearestReef(getPose())); 
+      waypointTarget.get(0),
+      waypointTarget.get(1),
+      waypointTarget.get(2)
+      ); 
 
 PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
 
