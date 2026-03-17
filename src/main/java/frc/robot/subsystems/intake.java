@@ -38,7 +38,6 @@ public class intake extends SubsystemBase {
      PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
       DoubleSolenoid m_doubleSolenoidLeft = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDLeftF, Constants.intakeConstants.intakeNuIDLeftR);
       DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
-  
 
   public intake() {
     intakeMotorConfig
@@ -56,7 +55,7 @@ public class intake extends SubsystemBase {
       ;
      
 
-
+      m_pH.enableCompressorDigital();
   }
 
     public void spinIntake (){
