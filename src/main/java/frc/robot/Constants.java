@@ -24,17 +24,24 @@ public static class climberConstants{
     public static final int deployMotorID = 16;
     public static final double forwardRotations = 0.0;
     public static final double forwardRotationsClimb = 0.0;
-    public static final double minLevel = 0;
-    public static final double baseLevel = 0;
-    public static final double highLevel = 48.0;
+    public static final double upCyc = 0;
+    public static final double downCyc = 0;
+    public static final double pushoutU= 48.0;
+    public static final double pushoutD = 48.0;
     public static final double maxLevel = 48.0;
-    public static final double climbLevel1 = 0.0;
-    public static final double climbLevel2 = 0.0;
+    public static final double minLevel = 0.0;
     public static final double climbLevel3 = 0.0;
     public static final double overShoot = 0.0;
     public static  double climberP = 0.11;
     public static  double climberI = 0.000001;
     public static  double climberD = 0.001;
+
+    
+        public static final int hookDeploy = 3;  
+        public static final int hookDeployIn = 3;  
+
+        public static final int climberPushoutN = 4;
+        public static final int climberPushoutIn = 4;
   }
   public static class intakeConstants{
     public static final int intakeMotorID=15;

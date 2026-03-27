@@ -63,6 +63,14 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
+    m_robotContainer.driveTrain.setupPathPlanner();
+      
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand("Fresno");
+
+      if (m_autonomousCommand != null) {
+         m_autonomousCommand.schedule();
+       }
+
   }
 
   /** This function is called periodically during autonomous. */

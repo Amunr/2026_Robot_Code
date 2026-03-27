@@ -62,7 +62,7 @@ public class DriveTrain extends SubsystemBase {
         1);
 
 
-      setupPhotonVision();
+      // setupPhotonVision();
   
 
   }
@@ -212,71 +212,71 @@ public class DriveTrain extends SubsystemBase {
     return 0;
   }
 
-  @Override
-  public void periodic() {
-    swerveDrive.updateOdometry();
+  // @Override
+  // public void periodic() {
+  //   swerveDrive.updateOdometry();
 
 
-      visionSubsystem.updatePoseEstimation(swerveDrive, swerveDrive.getPose());
-      SmartDashboard.putNumber("Pose X", getPose().getX());
-      SmartDashboard.putNumber("PoseY", getPose().getY());
-      SmartDashboard.putNumber("Pose rotation", getPose().getRotation().getDegrees());
+  //     visionSubsystem.updatePoseEstimation(swerveDrive, swerveDrive.getPose());
+  //     SmartDashboard.putNumber("Pose X", getPose().getX());
+  //     SmartDashboard.putNumber("PoseY", getPose().getY());
+  //     SmartDashboard.putNumber("Pose rotation", getPose().getRotation().getDegrees());
 
-  }
+  // }
 
-  public List<Pose2d> nearestTrench(Pose2d robotPos){
-    boolean isTopHalf = robotPos.getY() > 4.04;
-    boolean isBlueSide = robotPos.getX() < 8.27;
-    double finalRot = robotPos.getRotation().getRadians();
-    if(isTopHalf && isBlueSide){
-      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(finalRot)));
-    } else if (isTopHalf && !isBlueSide){
-      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(finalRot)));    
-    } else if (!isTopHalf && isBlueSide){
-      return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(finalRot))); 
+//   public List<Pose2d> nearestTrench(Pose2d robotPos){
+//     boolean isTopHalf = robotPos.getY() > 4.04;
+//     boolean isBlueSide = robotPos.getX() < 8.27;
+//     double finalRot = robotPos.getRotation().getRadians();
+//     if(isTopHalf && isBlueSide){
+//       return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(finalRot)));
+//     } else if (isTopHalf && !isBlueSide){
+//       return List.of(new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x3, Constants.driveConstants.upperTrench.y3), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x2, Constants.driveConstants.upperTrench.y2), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.upperTrench.x1, Constants.driveConstants.upperTrench.y1), new Rotation2d(finalRot)));    
+//     } else if (!isTopHalf && isBlueSide){
+//       return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(finalRot))); 
     
-    } else {
-return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
-      new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(finalRot))); 
-        }
-    }
+//     } else {
+// return List.of(new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x3, Constants.driveConstants.lowerTrench.y3), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x2, Constants.driveConstants.lowerTrench.y2), new Rotation2d(0)),
+//       new Pose2d(new Translation2d(Constants.driveConstants.lowerTrench.x1, Constants.driveConstants.lowerTrench.y1), new Rotation2d(finalRot))); 
+//         }
+//     }
 
  
     
 
-public void getToPoint(){
-      List<Pose2d> waypointTarget = nearestTrench(getPose());
+// public void getToPoint(){
+//       List<Pose2d> waypointTarget = nearestTrench(getPose());
 
-  List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        getPose(),
-      waypointTarget.get(0),
-      waypointTarget.get(1),
-      waypointTarget.get(2)
-      ); 
+//   List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+//         getPose(),
+//       waypointTarget.get(0),
+//       waypointTarget.get(1),
+//       waypointTarget.get(2)
+//       ); 
 
-PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+// PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
 
-// Create the path using the waypoints created above
-PathPlannerPath path = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-);
-  dynamicPath = AutoBuilder.followPath(path);
-  dynamicPath.schedule();
-}
+// // Create the path using the waypoints created above
+// PathPlannerPath path = new PathPlannerPath(
+//         waypoints,
+//         constraints,
+//         null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+//         new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+// // );
+//   dynamicPath = AutoBuilder.followPath(path);
+//   dynamicPath.schedule();
+// }
 
-public void cancelGetToPoint(){
-  if (dynamicPath != null && dynamicPath.isScheduled()) {
-  dynamicPath.cancel();
-  }
-}
+// // public void cancelGetToPoint(){
+// //   if (dynamicPath != null && dynamicPath.isScheduled()) {
+//   dynamicPath.cancel();
+//   }
+// }
 }

@@ -12,6 +12,8 @@ import swervelib.SwerveInputStream;
 
 import java.io.File;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -96,9 +98,9 @@ public class RobotContainer {
     new JoystickButton(driverXbox.getHID(), XboxController.Button.kLeftBumper.value)
     .onTrue(climbl1);*/
     new JoystickButton(driverXbox.getHID(), XboxController.Button.kB.value)
-    .onTrue(new InstantCommand(m_climberSubsystem::climbUp));
+    .onTrue(new SequentialCommandGroup(new InstantCommand(m_climberSubsystem::pushout),new WaitCommand(1), new InstantCommand(m_climberSubsystem::hooksOut), new InstantCommand(m_intakeSubsystem::intakeFoldIn)));
     new JoystickButton(driverXbox.getHID(), XboxController.Button.kX.value)
-    .onTrue(new InstantCommand(m_climberSubsystem::climbDown));
+    .onTrue(new SequentialCommandGroup(new InstantCommand(m_climberSubsystem::flipback), new WaitCommand(3), new InstantCommand(m_climberSubsystem::flipback), new WaitCommand(3), new InstantCommand(m_climberSubsystem::flipback), new WaitCommand(3), new InstantCommand(m_climberSubsystem::flipback), new WaitCommand(3), new InstantCommand(m_climberSubsystem::flipback)));
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > 0.3).whileTrue(new InstantCommand(m_intakeSubsystem::spinIntake))
     .onFalse(new InstantCommand(m_intakeSubsystem::stopIntake));
@@ -123,6 +125,12 @@ public class RobotContainer {
   }
   public void setMotorBrake(boolean brake) {
     driveTrain.setMotorBrake(brake);
+  }
+
+    public Command getAutonomousCommand(String pathName)
+  {
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return new PathPlannerAuto(pathName);
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

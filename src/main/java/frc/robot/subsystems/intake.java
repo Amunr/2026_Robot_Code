@@ -30,12 +30,15 @@ import frc.robot.Constants.intakeConstants;
 
 
 public class intake extends SubsystemBase {
+  boolean intakeOut = false;
+  boolean intakeForward = false;
+  boolean  intakeReverse = false;
   /** Creates a new ExampleSubsystem. */
   public static SparkMax intakeMotor = new SparkMax(Constants.intakeConstants.intakeMotorID,MotorType.kBrushless);
     SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
     public static SparkMax intakeMotorSecond = new SparkMax(Constants.intakeConstants.intakeMotorSecond,MotorType.kBrushless);
     public RelativeEncoder intakeMotorEncoder = intakeMotor.getEncoder();
-     PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
+    public static PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
       DoubleSolenoid m_doubleSolenoidLeft = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDLeftF, Constants.intakeConstants.intakeNuIDLeftR);
       DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
 
@@ -62,14 +65,20 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
               0, 
               ArbFFUnits.kVoltage);*/
         intakeMotor.set(0.7);
+        intakeForward = true;
+        intakeReverse = false;
             
     }
     public void stopIntake(){
       intakeMotor.stopMotor();
+      intakeForward = false;
+      intakeReverse = false;
     }
 
     public void reverseINtake(){
       intakeMotor.set(-0.7);
+      intakeReverse = true;
+      intakeForward = false;
     } 
 
 
@@ -77,11 +86,12 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
   public void intakeFoldOut(){
     m_doubleSolenoidLeft.set(Value.kForward);
     m_doubleSolenoidRight.set(Value.kForward);
+    intakeOut = true;
   }
-
   public void intakeFoldIn(){
     m_doubleSolenoidLeft.set(Value.kReverse);
     m_doubleSolenoidRight.set(Value.kReverse);
+    intakeOut = false;
   } 
 
   /**
@@ -110,8 +120,11 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
       default:
         SmartDashboard.putString("Get Solenoid", "N/A");
         break;
-
   }
+
+  SmartDashboard.putBoolean("Intake Forward", intakeForward);
+  SmartDashboard.putBoolean("Intake Reverse", intakeReverse);
+  SmartDashboard.putBoolean("Intake Out", intakeOut);
 
    switch (m_doubleSolenoidRight.get()) {
       case kOff:
@@ -134,5 +147,10 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public static Object getInstance() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
   }
 }
