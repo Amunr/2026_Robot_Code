@@ -46,11 +46,11 @@ public static class climberConstants{
   public static class intakeConstants{
     public static final int intakeMotorID=15;
     public static final int intakeMotorSecond = 19;
-    public static final int intakeNuIDLeftF= 1;
-        public static final int intakeNuIDLeftR= 1;
+    public static final int intakeNuIDLeftF= 15;
+        public static final int intakeNuIDLeftR= 14;
 
-    public static final int intakeNuIDRightF= 2;
-        public static final int intakeNuIDRightR= 2;
+    // public static final int intakeNuIDRightF= 2;
+    //     public static final int intakeNuIDRightR= 2;
     public static final int pnumaticID = 18;
     public static final double intakeOutRotations = 22.0;
     public static final double intakeInRotations = 2.0;

@@ -40,11 +40,11 @@ public class intake extends SubsystemBase {
     public RelativeEncoder intakeMotorEncoder = intakeMotor.getEncoder();
     public static PneumaticHub m_pH = new PneumaticHub(Constants.intakeConstants.pnumaticID);
       DoubleSolenoid m_doubleSolenoidLeft = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDLeftF, Constants.intakeConstants.intakeNuIDLeftR);
-      DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
+   //   DoubleSolenoid m_doubleSolenoidRight = m_pH.makeDoubleSolenoid(Constants.intakeConstants.intakeNuIDRightF, Constants.intakeConstants.intakeNuIDRightR);
 
   public intake() {
 
-      m_pH.enableCompressorDigital();
+      m_pH.enableCompressorAnalog(110,115);
   }
 
     public void spinIntake (){
@@ -85,12 +85,12 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
 
   public void intakeFoldOut(){
     m_doubleSolenoidLeft.set(Value.kForward);
-    m_doubleSolenoidRight.set(Value.kForward);
+   // m_doubleSolenoidRight.set(Value.kForward);
     intakeOut = true;
   }
   public void intakeFoldIn(){
     m_doubleSolenoidLeft.set(Value.kReverse);
-    m_doubleSolenoidRight.set(Value.kReverse);
+   // m_doubleSolenoidRight.set(Value.kReverse);
     intakeOut = false;
   } 
 
@@ -126,21 +126,7 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
   SmartDashboard.putBoolean("Intake Reverse", intakeReverse);
   SmartDashboard.putBoolean("Intake Out", intakeOut);
 
-   switch (m_doubleSolenoidRight.get()) {
-      case kOff:
-        SmartDashboard.putString("Get Solenoid", "kOff");
-        break;
-      case kForward:
-        SmartDashboard.putString("Get Solenoid", "kForward");
-        break;
-      case kReverse:
-        SmartDashboard.putString("Get Solenoid", "kReverse");
-        break;
-      default:
-        SmartDashboard.putString("Get Solenoid", "N/A");
-        break;
 
-  }
         }
 
 

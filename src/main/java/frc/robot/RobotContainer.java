@@ -12,10 +12,15 @@ import swervelib.SwerveInputStream;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -73,9 +78,14 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+        NamedCommands.registerCommand("intake", intakeAuto);
     configureBindings();
+      UsbCamera camera = CameraServer.startAutomaticCapture();
+        ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
+        driverTab.add("Camera", camera);
   }
 
+  Command intakeAuto = new SequentialCommandGroup(new InstantCommand(m_intakeSubsystem::intakeFoldOut),new InstantCommand(m_intakeSubsystem::spinIntake), new WaitCommand(7), new InstantCommand(m_intakeSubsystem::stopIntake));
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary

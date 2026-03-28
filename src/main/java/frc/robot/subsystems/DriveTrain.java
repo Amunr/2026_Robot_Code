@@ -64,7 +64,7 @@ public class DriveTrain extends SubsystemBase {
 
       // setupPhotonVision();
   
-
+      setupPathPlanner();
   }
 
   /**
