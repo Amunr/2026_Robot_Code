@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.driveTrain.setupPathPlanner();
       
-      m_autonomousCommand = m_robotContainer.getAutonomousCommand("Fresno");
+     m_autonomousCommand = m_robotContainer.getAutonomousCommand("Fresno");
 
       if (m_autonomousCommand != null) {
          m_autonomousCommand.schedule();
