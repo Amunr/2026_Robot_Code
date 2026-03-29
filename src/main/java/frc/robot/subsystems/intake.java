@@ -44,17 +44,19 @@ public class intake extends SubsystemBase {
 
   public intake() {
 
-      m_pH.enableCompressorAnalog(110,115);
-  }
-
-    public void spinIntake (){
-
-      intakeMotorConfig
+      m_pH.enableCompressorDigital();
+         intakeMotorConfig
     .inverted(false)
+    .smartCurrentLimit(40)
     .idleMode(IdleMode.kCoast);
 intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); 
 
 intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); 
+  }
+
+    public void spinIntake (){
+
+   
 
 //  elevatorPID.setReference(-32,SparkBase.ControlType.kPosition);
           /* 
@@ -64,19 +66,22 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
               ClosedLoopSlot.kSlot0,
               0, 
               ArbFFUnits.kVoltage);*/
-        intakeMotor.set(0.7);
+       intakeMotor.set(-0.7);
+       intakeMotorSecond.set(0.7);
         intakeForward = true;
         intakeReverse = false;
             
     }
     public void stopIntake(){
       intakeMotor.stopMotor();
+      intakeMotorSecond.stopMotor();
       intakeForward = false;
       intakeReverse = false;
     }
 
     public void reverseINtake(){
-      intakeMotor.set(-0.7);
+     intakeMotor.set(0.7);
+     intakeMotorSecond.set(-0.7);
       intakeReverse = true;
       intakeForward = false;
     } 
@@ -107,21 +112,6 @@ intakeMotorSecond.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, P
 
   @Override
   public void periodic() {
-  switch (m_doubleSolenoidLeft.get()) {
-      case kOff:
-        SmartDashboard.putString("Get Solenoid", "kOff");
-        break;
-      case kForward:
-        SmartDashboard.putString("Get Solenoid", "kForward");
-        break;
-      case kReverse:
-        SmartDashboard.putString("Get Solenoid", "kReverse");
-        break;
-      default:
-        SmartDashboard.putString("Get Solenoid", "N/A");
-        break;
-  }
-
   SmartDashboard.putBoolean("Intake Forward", intakeForward);
   SmartDashboard.putBoolean("Intake Reverse", intakeReverse);
   SmartDashboard.putBoolean("Intake Out", intakeOut);

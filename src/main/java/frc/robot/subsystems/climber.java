@@ -61,6 +61,7 @@ public class climber extends SubsystemBase {
 
     climbMotorConfig
       .inverted(true)
+      .smartCurrentLimit(40)
       .idleMode(IdleMode.kBrake);
 
       climbMotorConfig.encoder
